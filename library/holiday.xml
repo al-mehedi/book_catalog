@@ -5,7 +5,7 @@
         <frequency recommended="4" startime="0600" endtime="2200" date="2512" />
         <frequency recommended="2" startime="0600" endtime="2200" date="1402" />
         <frequency recommended="2" startime="0600" endtime="2200" date="2703" />
-        <frequency recommended="3" startime="0600" endtime="2200" date="1401" />
+        <frequency recommended="2" startime="0600" endtime="2200" date="1701" />
     </frequencies>
  </holiday-lib>
 </catalog>

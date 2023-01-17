@@ -134,35 +134,34 @@ fn main() {
 
     /* GET USER HOLIDAY RECOMMENDATION */
     let mut user_input = String::new();
-    println!("Holiday recommendation Y/N (e.g., Y) :");
+    println!("Enter your holiday recommendation date (e.g., 1701) :");
     let _ = std::io::stdin().read_line(&mut user_input).unwrap();
     
-    // Converts user input into bool
-    let user_input = user_input.trim();
-    let input_recommend = if user_input == "Y" {
-      true
-    } else if user_input == "N" {
-      false
-    } else {
-      println!("User input must be a Y or N");
-      continue;
-    };
+    // Take user input as holiday recommendation date
+    let input_date = user_input.trim();
 
     /* USER QUERY STARTS HERE */
     if let Some(libraries) = get_available_libraries(&storage_libraries) {
       println!("{} libraries found!", libraries.len());
 
+      let mut skip_readtime = 0;
       let mut total_readtime = 0;
       let mut book_list = Vec::new();
+      let mut catalog_items = Vec::new();
       let mut catalog = String::from("<?xml version=\"1.0\"?>\n<catalog>\n");
 
       /* Checks if holiday book is recommendable */
-      let frequency = &lib_holiday.holiday_lib.frequencies.frequency;
-      let repeat_frequency = is_recommendable(frequency);
+      let frequencies = &lib_holiday.holiday_lib.frequencies.frequency;
+      let repeat_frequency = is_recommendable(&input_date, frequencies);
 
       for library in libraries {
         // Check guard for early breakout
-        if total_readtime >= input_time { break; }
+        if catalog_items.len() > 0 {
+          if total_readtime - skip_readtime >= input_time { break; }
+        } else {
+          if total_readtime >= input_time { break; }
+        }
+        
 
         let start_at = library_time(library.metadata.starttime.as_str());
         let end_at = library_time(library.metadata.endtime.as_str());
@@ -171,11 +170,9 @@ fn main() {
         let mut session = 0;
 
         loop {
-          if session < lib_time && total_readtime < input_time {
+          if session < lib_time && total_readtime - skip_readtime < input_time {
             if let Some(rf) = repeat_frequency {
-              if input_recommend
-              && book_list.len() > 0
-              && book_list.len() % rf == 0 {
+              if book_list.len() % (rf + 1) == 0 {
                 let mut rng = rand::thread_rng();
                 let index = rng.gen_range(0..storage_holiday_books.len());
                 let books: Vec<Book> = storage_holiday_books.values().cloned().collect();
@@ -185,7 +182,11 @@ fn main() {
 
                 session += books[index].read_time();
                 total_readtime += books[index].read_time();
-                catalog.push_str(&books[index].content);
+                catalog_items.push(books[index].content.to_owned());
+
+                if skip_readtime == 0 {
+                  skip_readtime = books[index].read_time();
+                } 
 
                 continue;
               }
@@ -196,7 +197,7 @@ fn main() {
 
             session += book.read_time();
             total_readtime += book.read_time();
-            catalog.push_str(&book.content);
+            catalog_items.push(book.content.to_owned());
 
             continue;
           }
@@ -205,7 +206,13 @@ fn main() {
         }
       }
       
-      catalog.push_str("</catalog>");
+      let items = if let Some(_) = repeat_frequency {
+        catalog_items[1..].join("")
+      } else {
+        catalog_items.join("")
+      };
+
+      catalog.push_str(&format!("{items}</catalog>"));
 
       println!("Saving catalog.xml in working directory\n\n");
       fs::write("catalog.xml", catalog).expect("Unable to write file");
@@ -325,15 +332,9 @@ fn library_time(time: &str) -> u32 {
 }
 
 /* Return recommendable holiday book frequency */
-fn is_recommendable(frequencies: &Vec<FrequencyAttr>) -> Option<usize> {
-  let day =  offset::Local::now().day();
-  let month = offset::Local::now().month();
-
+fn is_recommendable(input_date: &str, frequencies: &Vec<FrequencyAttr>) -> Option<usize> {
   for frequency in frequencies {
-    let f_day = frequency.date[..2].parse::<u32>().unwrap();
-    let f_month = frequency.date[2..].parse::<u32>().unwrap();
-
-    if day == f_day && month == f_month {
+    if input_date == &frequency.date {
       return Some(frequency.recommended.parse::<usize>().unwrap())
     }
   }
