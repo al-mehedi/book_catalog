@@ -36,14 +36,11 @@ struct BookMetaData { id: String, readtime: u32 }
 
 /* Structure for Library */
 
-#[derive(Debug, Serialize, Deserialize)]
-struct BookId { id: String }
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct LibraryMetadata { starttime: String, endtime: String, opendays: u32 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Catalog { book: Vec<BookId>, library: LibraryMetadata }
+struct Catalog { library: LibraryMetadata }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Library { books: Vec<String>, metadata: LibraryMetadata }
@@ -231,15 +228,17 @@ fn get_generic_books(dir: &str, pattern: Regex, hash_map: &mut HashMap<String, B
   let books = read_file_contents(dir, pattern);
 
   for book in books {
-    let item: BookMetaData = serde_xml_rs::from_str(&book).unwrap();
+    let book_id = extract_id(&book).unwrap();
+    let readtime = extract_readtime(&book).unwrap();
+
     let data = Book {
-      id: item.id.to_owned(),
-      readtime: item.readtime,
+      id: book_id.clone(),
+      readtime: readtime.parse::<u32>().unwrap(),
       content: book
     };
 
     // Assumes all books are unique
-    hash_map.insert(item.id.to_owned(), data);
+    hash_map.insert(book_id, data);
   }
 }
 
@@ -250,20 +249,22 @@ fn get_generic_books(dir: &str, pattern: Regex, hash_map: &mut HashMap<String, B
 fn get_holiday_books(lib_dir: &str, file_dir: &str, holiday: &HolidayLibrary, hash_map: &mut HashMap<String, Book>) {
   let filepath = format!("{}/{}.xml", lib_dir, holiday.holiday_lib.uid);
   let data = fs::read_to_string(filepath).unwrap();
-  let item: Catalog = serde_xml_rs::from_str(data.as_str()).unwrap();
 
-  for book in item.book.iter() {
-    let filepath = format!("{}/{}.xml", file_dir, book.id);
+  for book_id in extract_ids(&data) {
+    let filepath = format!("{}/{}.xml", file_dir, book_id);
     let book = fs::read_to_string(filepath).unwrap();
-    let item: BookMetaData = serde_xml_rs::from_str(book.as_str()).unwrap();
+
+    let book_id = extract_id(&book).unwrap();
+    let readtime = extract_readtime(&book).unwrap();
+
     let data = Book {
-      id: item.id.to_owned(),
-      readtime: item.readtime,
+      id: book_id.clone(),
+      readtime: readtime.parse::<u32>().unwrap(),
       content: book
     };
 
     // Assumes all books are unique
-    hash_map.insert(item.id.to_owned(), data);
+    hash_map.insert(book_id, data);
   }
 }
 
@@ -276,10 +277,7 @@ fn get_generic_libraries(dir: &str, pattern: Regex, list: &mut Vec<Library>) {
 
   for library in libraries {
     let item: Catalog = serde_xml_rs::from_str(library.as_str()).unwrap();
-    
-    // Store book IDs string
-    let mut book_ids = Vec::new();
-    for book in item.book.iter() { book_ids.push(book.id.to_owned()) }
+    let book_ids = extract_ids(&library);
 
     list.push(Library { books: book_ids, metadata: item.library })
   }
@@ -370,4 +368,45 @@ fn u_items (mut items: Vec<String>, to_remove: Vec<String>) -> Vec<String> {
   let to_remove = BTreeSet::from_iter(to_remove);
   items.retain(|e| !to_remove.contains(e));
   items
+}
+
+/* Extracts Book Id */
+fn extract_id(book: &str) -> Option<String> {
+  let regex = Regex::new(r#"id=".*?""#).unwrap();
+  if let Some(book_id) = regex.find(&book) {
+    let book_id = book_id.as_str();
+    Some(book_id[4..book_id.len() - 1].to_owned())
+  } else {
+    None
+  }
+}
+
+/* Extracts Multiple Book Id */
+fn extract_ids(library: &str) -> Vec<String> {
+  let regex = Regex::new(r#"id=".*?""#).unwrap();
+
+  let mut ids = Vec::new();
+  for book_id in regex.find_iter(library) {
+    let id = book_id.as_str();
+    if id.contains("bk") {
+      ids.push(id[4..id.len() - 1].to_owned())
+    }
+  }
+
+  ids
+}
+
+/* Extracts Readtime from Book */
+fn extract_readtime(book: &str) -> Option<String> {
+  let regex = Regex::new(r#"readtime["=>]+[[:digit:]]+[=<]?"#).unwrap();
+  if let Some(readtime) = regex.find(&book) {
+    let readtime = readtime.as_str();
+    if readtime.contains("=") {
+      Some(readtime[10..readtime.len() - 1].to_owned())
+    } else {
+      Some(readtime[9..readtime.len() - 1].to_owned())
+    }
+  } else {
+    None
+  }
 }

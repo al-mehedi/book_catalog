@@ -1,9 +1,7 @@
 <book id="bk101">
-  <author>Gambardella, Matthew</author>
-  <title>XML Developer's Guide</title>
-  <genre>Computer</genre>
-  <price>44.95</price>
-  <readtime>2700000</readtime>
-  <publish_date>2000-10-01</publish_date>
+  <meta>
+    <meta-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
+  </meta>
+  <Info readtime="2700000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
 </book>
