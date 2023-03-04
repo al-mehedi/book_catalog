@@ -54,8 +54,8 @@ fn gen_catalog() {
     let user_readtime = if let Some(minutes) = Utils::readtime() { minutes } else { continue; };
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      // println!("{} libraries found!", libraries.len());
-      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
+      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut total_readtime = 0;
       let mut book_list = Vec::new();
@@ -114,8 +114,8 @@ fn gen_non_repeated_catalog() {
     let user_readtime = if let Some(minutes) = Utils::readtime() { minutes } else { continue; };
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      // println!("{} libraries found!", libraries.len());
-      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
+      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut total_readtime = 0;
       let mut book_list = Vec::new();
@@ -177,8 +177,8 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
 
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      // println!("{} libraries found!", libraries.len());
-      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
+      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut skip_readtime = 0;
       let mut total_readtime = 0;
