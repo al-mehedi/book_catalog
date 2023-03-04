@@ -4,13 +4,7 @@
     <book-catalog id="{101-a2c}"/>
   </book>
   <book>
-    <book-catalog id="{102-b2c}"/>
-  </book>
-  <book>
     <book-catalog id="{103-c2c}"/>
-  </book>
-  <book>
-    <book-catalog id="{104-d2c}"/>
   </book>
   <book>
     <book-catalog id="{106-f2c}"/>

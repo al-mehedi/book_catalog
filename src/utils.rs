@@ -112,3 +112,17 @@ pub fn extract_readtime(book: &str) -> Option<String> {
     None
   }
 }
+
+pub fn lib_time(start_time: &str, end_time: &str) -> u32 {
+  let start_at = Library::time_in_minutes(start_time);
+  let mut end_at = Library::time_in_minutes(end_time);
+
+  // 1440 is the number of minutes in a day
+  if end_at < start_at { end_at += 1440; }
+
+  let st = offset::Local::now().hour();
+  let stm = offset::Local::now().minute();
+  let start_at = (st * 60) + stm;
+
+  end_at - start_at
+}

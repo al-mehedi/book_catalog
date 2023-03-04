@@ -37,9 +37,9 @@ use holiday as Holiday;
 
 
 fn main() {
-  // gen_catalog();
+  gen_catalog();
   // gen_non_repeated_catalog();
-  gen_non_repeated_catalog_with_holiday_recommendation();
+  // gen_non_repeated_catalog_with_holiday_recommendation();
 }
 
 
@@ -54,7 +54,8 @@ fn gen_catalog() {
     let user_readtime = if let Some(minutes) = Utils::readtime() { minutes } else { continue; };
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!", libraries.len());
+      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut total_readtime = 0;
       let mut book_list = Vec::new();
@@ -64,12 +65,11 @@ fn gen_catalog() {
       for library in libraries {
         // Check guard for early breakout
         if total_readtime >= user_readtime { break; }
-        
+
+        // Calculate a library readtime based on current time
         let st = library.metadata.starttime.as_str();
-        let start_at = Library::time_in_minutes(st);
         let et = library.metadata.endtime.as_str();
-        let end_at = Library::time_in_minutes(et);
-        let lib_time = end_at - start_at;
+        let lib_time = Utils::lib_time(st, et);
 
         let mut session = 0;
         loop {
@@ -77,9 +77,11 @@ fn gen_catalog() {
             let book_id = library.get_rand_book(&mut book_list);
             let book = mem_books.get(&book_id).unwrap();
 
-            session += book.read_time();
-            total_readtime += book.read_time();
-            catalog_items.push(book.content.to_owned());
+            if book.read_time() > 0 {
+              session += book.read_time();
+              total_readtime += book.read_time();
+              catalog_items.push(book.content.to_owned());
+            }
 
             continue;
           }
@@ -112,7 +114,8 @@ fn gen_non_repeated_catalog() {
     let user_readtime = if let Some(minutes) = Utils::readtime() { minutes } else { continue; };
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!", libraries.len());
+      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut total_readtime = 0;
       let mut book_list = Vec::new();
@@ -123,11 +126,10 @@ fn gen_non_repeated_catalog() {
         // Check guard for early breakout
         if total_readtime >= user_readtime { break; }
 
+        // Calculate a library readtime based on current time
         let st = library.metadata.starttime.as_str();
-        let start_at = Library::time_in_minutes(st);
         let et = library.metadata.endtime.as_str();
-        let end_at = Library::time_in_minutes(et);
-        let lib_time = end_at - start_at;
+        let lib_time = Utils::lib_time(st, et);
 
         let mut session = 0;
         loop {
@@ -135,9 +137,11 @@ fn gen_non_repeated_catalog() {
             let book_id = library.get_non_repeated_book(&mut book_list);
             let book = mem_books.get(&book_id).unwrap();
 
-            session += book.read_time();
-            total_readtime += book.read_time();
-            catalog_items.push(book.content.to_owned());
+            if book.read_time() > 0 {
+              session += book.read_time();
+              total_readtime += book.read_time();
+              catalog_items.push(book.content.to_owned());
+            }
 
             continue;
           }
@@ -173,7 +177,8 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
 
 
     if let Some(libraries) = Library::get_available_libraries(&mem_libraries) {
-      println!("{} libraries found!", libraries.len());
+      // println!("{} libraries found!", libraries.len());
+      println!("{} libraries found!\n{:?}", libraries.len(), libraries);
 
       let mut skip_readtime = 0;
       let mut total_readtime = 0;
@@ -193,11 +198,10 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
           if total_readtime >= user_readtime { break; }
         }
 
+        // Calculate a library readtime based on current time
         let st = library.metadata.starttime.as_str();
-        let start_at = Library::time_in_minutes(st);
         let et = library.metadata.endtime.as_str();
-        let end_at = Library::time_in_minutes(et);
-        let lib_time = end_at - start_at;
+        let lib_time = Utils::lib_time(st, et);
 
         let mut session = 0;
         loop {
@@ -215,16 +219,18 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
                 let books: Vec<Books::Book> = mem_books.values().cloned().collect();
                 
                 let book_id = books[index].id.to_owned();
-                book_list.push(book_id.to_owned());
+                if books[index].read_time() > 0 {
+                  book_list.push(book_id.to_owned());
 
-                session += books[index].read_time();
-                total_readtime += books[index].read_time();
+                  session += books[index].read_time();
+                  total_readtime += books[index].read_time();
 
-                /* Mimics Holiday Book */
-                catalog_items.push(format!("<holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday>{}", &books[index].content.to_owned()));
+                  /* Mimics Holiday Book */
+                  catalog_items.push(format!("<holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday>{}", &books[index].content.to_owned()));
 
-                if skip_readtime == 0 {
-                  skip_readtime = books[index].read_time();
+                  if skip_readtime == 0 {
+                    skip_readtime = books[index].read_time();
+                  }
                 }
 
                 continue;

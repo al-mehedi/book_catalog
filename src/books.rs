@@ -34,7 +34,7 @@ pub fn get_generic_books(dir: &str) -> HashMap<String, Books::Book>{
 
   for book in books {
     let book_id = Utils::extract_id(&book).unwrap();
-    let readtime = Utils::extract_readtime(&book).unwrap();
+    let readtime = Utils::extract_readtime(&book).unwrap_or("0".to_owned());
 
     let data = Book {
       id: book_id.clone(),

@@ -77,6 +77,8 @@ pub fn get_generic_libraries(dir: &str) -> Vec<Library>{
 pub fn get_available_libraries(libraries: &Vec<Library>) -> Option<Vec::<Library>> {
   let mut catalogs = Vec::new();
   let current_hour = offset::Local::now().hour();
+  let current_minute = offset::Local::now().minute();
+  let day_in_minutes = (current_hour * 60) + current_minute;
   let today = offset::Local::now().weekday().num_days_from_sunday() + 1;
 
   // For manual query
@@ -87,12 +89,24 @@ pub fn get_available_libraries(libraries: &Vec<Library>) -> Option<Vec::<Library
     if library.metadata.opendays == 0 || library.metadata.opendays == today {
       // Converts time HH:MM into minutes
       let start_at = time_in_minutes(library.metadata.starttime.as_str());
-      let end_at = time_in_minutes(library.metadata.endtime.as_str());
-      let time_span = end_at - start_at; 
+      let mut end_at = time_in_minutes(library.metadata.endtime.as_str());
+
+      /*
+       *  When end time < start time means 
+       *  23 hours must be add to the end time
+       *  So the end time is the next day
+       */
+
+      let time_span = if end_at < start_at {
+        end_at += 1440; // 1440 is the number of minutes in a day
+        end_at - start_at 
+      } else {
+        end_at - start_at
+      };
 
       if time_span != 0
-      && current_hour * 60 >= start_at
-      && current_hour * 60 <= end_at {
+      && day_in_minutes >= start_at
+      && day_in_minutes <= end_at {
         catalogs.push(library.clone());
       }
     }

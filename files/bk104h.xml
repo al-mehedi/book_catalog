@@ -2,6 +2,6 @@
    <book>
     <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
   </book>
-  <library readtime="2700000" publish_date="2000-10-01">
+  <library readtime="3600000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
 </catalog>
