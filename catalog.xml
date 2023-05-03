@@ -6,17 +6,23 @@
   </book>
   <library readtime="3600000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
+</catalog><catalog id="{104-d2c}">
+  <book>
+    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
+  </book>
+  <library readtime="3600000" publish_date="2000-10-01">
+  <description>An in-depth look at creating applications with XML.</description>
+</catalog>**HOLIDAY**<catalog id="{101-a2c}">
+  <book>
+    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
+  </book>
+  <library readtime="3600000" publish_date="2000-10-01">
+  <description>An in-depth look at creating applications with XML.</description>
 </catalog><catalog id="{107-g2c}">
   <book>
     <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
   </book>
   <library publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday><catalog id="{108-h2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
 </catalog><catalog id="{103-c2c}">
   <book>
@@ -24,67 +30,13 @@
   </book>
   <library readtime="3600000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{107-g2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday><catalog id="{105-e2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{101-a2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{107-g2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday><catalog id="{110-j2c}">
+</catalog>**HOLIDAY**<catalog id="{101-a2c}">
   <book>
     <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
   </book>
   <library readtime="3600000" publish_date="2000-10-01">
   <description>An in-depth look at creating applications with XML.</description>
 </catalog><catalog id="{104-d2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{101-a2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday><catalog id="{105-e2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{102-b2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><catalog id="{104-d2c}">
-  <book>
-    <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
-  </book>
-  <library readtime="3600000" publish_date="2000-10-01">
-  <description>An in-depth look at creating applications with XML.</description>
-</catalog><holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday><catalog id="{112-l2c}">
   <book>
     <book-data author="Gambardella, Matthew" title="XML Developer's Guide" genre="Computer" price="44.95"/>
   </book>

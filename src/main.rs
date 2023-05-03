@@ -37,9 +37,9 @@ use holiday as Holiday;
 
 
 fn main() {
-  gen_catalog();
+  // gen_catalog();
   // gen_non_repeated_catalog();
-  // gen_non_repeated_catalog_with_holiday_recommendation();
+  gen_non_repeated_catalog_with_holiday_recommendation();
 }
 
 
@@ -170,6 +170,12 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
   let mem_libraries = Library::get_generic_libraries(DIR_LIBRARY);
   let mem_holiday = Holiday::get_holiday_library(DIR_HOLIDAY, "holiday.xml");
 
+  // Get the holiday books from `holiday.xml` -> uid
+  let holiday_books = utils::read_holiday_file_contents(DIR_HOLIDAY, &mem_holiday.holiday_lib.uid);
+  let holiday_book_ids = Utils::extract_ids(&holiday_books);
+  // Generate holiday books
+  let mem_holiday_books = Books::get_holiday_books(DIR_BOOK, holiday_book_ids);
+
   loop {
     let user_readtime = if let Some(minutes) = Utils::readtime() { minutes } else { continue; };
 
@@ -211,12 +217,11 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
               if book_list.len() % (rf + 1) == 0 {
 
                 /* 
-                  No Holiday Books
-                  So generates random book from books
+                  Generates from random Holiday Books
                 */
                 let mut rng = rand::thread_rng();
-                let index = rng.gen_range(0..mem_books.len());
-                let books: Vec<Books::Book> = mem_books.values().cloned().collect();
+                let index = rng.gen_range(0..mem_holiday_books.len());
+                let books: Vec<Books::Book> = mem_holiday_books.values().cloned().collect();
                 
                 let book_id = books[index].id.to_owned();
                 if books[index].read_time() > 0 {
@@ -225,8 +230,8 @@ fn gen_non_repeated_catalog_with_holiday_recommendation() {
                   session += books[index].read_time();
                   total_readtime += books[index].read_time();
 
-                  /* Mimics Holiday Book */
-                  catalog_items.push(format!("<holiday>FOLLOWING BOOK IS HOLIDAY BOOK</holiday>{}", &books[index].content.to_owned()));
+                  /* Inserts the Holiday Book */
+                  catalog_items.push(format!("{}", &books[index].content.to_owned()));
 
                   if skip_readtime == 0 {
                     skip_readtime = books[index].read_time();

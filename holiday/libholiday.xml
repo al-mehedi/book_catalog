@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<catalog>
+  <book id="{101-a2c}"/>
+  <book id="{102-b2c}"/>
+  <book id="{103-c2c}"/>
+  <book id="{104-d2c}"/>
+
+  <library createdtime="10082022" starttime="0900" cardno="#bk101" endtime="1000" location="bkcity" locationid="1234566" opendays="4"/>
+</catalog>

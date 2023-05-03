@@ -82,7 +82,7 @@ pub fn get_available_libraries(libraries: &Vec<Library>) -> Option<Vec::<Library
   let today = offset::Local::now().weekday().num_days_from_sunday() + 1;
 
   // For manual query
-  // let today = 5;
+  let today = 7;
   // let current_hour = 10;
   
   for library in libraries {

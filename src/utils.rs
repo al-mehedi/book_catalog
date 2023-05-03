@@ -56,6 +56,15 @@ pub fn read_file_contents(dir: &str, reg_ex: Regex) -> Vec<String> {
   contents
 }
 
+/*
+  Read all the files from a given directory
+  and returns a vector of strings containing all file contents
+*/
+pub fn read_holiday_file_contents(dir: &str, file: &str) -> String {
+  let filepath = format!("{}/{}.xml", dir, file);
+  fs::read_to_string(filepath).unwrap()
+}
+
 
 /*
   Returns unique items from given vectors
